@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.venv
+venv/
+ENV/
+env.bak
+venv.bak
+
+# Node
+node_modules/
+dist/
+.vite/
+frontend/node_modules/
+frontend/dist/
+
+# Database
+database/*.db
+database/*.sqlite
+
+# Uploads (keep folder, ignore files)
+uploads/*
+!uploads/.gitkeep
+
+# Google credentials (NEVER commit this!)
+*.json
+!package.json
+!package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

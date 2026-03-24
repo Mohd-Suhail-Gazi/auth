@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  # ─── FastAPI Backend ───────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fbd_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app            # Live reload on code changes
+      - ./uploads:/app/uploads    # Shared upload storage
+      - ./database:/app/database  # Persistent SQLite DB
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/key.json
+    networks:
+      - fbd_network
+    restart: unless-stopped
+
+  # ─── React + Vite Frontend ────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fbd_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app           # Live reload on code changes
+      - /app/node_modules         # Exclude node_modules from bind mount
+    depends_on:
+      - backend
+    networks:
+      - fbd_network
+    restart: unless-stopped
+
+networks:
+  fbd_network:
+    driver: bridge
