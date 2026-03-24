@@ -18,8 +18,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Expose the port FastAPI runs on
+# Ensure necessary directories exist
+RUN mkdir -p /app/database /app/uploads
+
+# Expose the port (Render will override this, but good practice)
 EXPOSE 8000
 
-# Run the app with uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Run the app with uvicorn, using $PORT if provided by Render
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]

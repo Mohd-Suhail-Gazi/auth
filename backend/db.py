@@ -2,8 +2,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+import os
+
 # Database URL pointing to our database folder
-SQLALCHEMY_DATABASE_URL = "sqlite:///./database/brands.db"
+DB_PATH = "./database/brands.db"
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 # Create engine (check_same_thread=False is needed for SQLite in FastAPI)
 engine = create_engine(
