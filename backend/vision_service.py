@@ -14,6 +14,11 @@ def analyze_brand_authenticity(image_path: str, expected_brand: str) -> dict:
         if google_json:
             # Parse the JSON string from environment variable
             info = json.loads(google_json)
+            
+            # Sanitize the private key (fix escaped backslashes common in Render/Env vars)
+            if "private_key" in info:
+                info["private_key"] = info["private_key"].replace("\\n", "\n")
+                
             client = vision.ImageAnnotatorClient.from_service_account_info(info)
         else:
             # Fallback to default (filesystem check)
