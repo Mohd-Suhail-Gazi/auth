@@ -23,16 +23,8 @@ from models import Base, ScanHistory
 Base.metadata.create_all(bind=engine)
 
 # Auto-set Google Credentials
-# Priority 1: Environment variable containing the JSON content (for Render/Heroku/Vercel)
-GOOGLE_JSON_CONTENT = os.getenv("GOOGLE_CREDENTIALS_JSON")
-if GOOGLE_JSON_CONTENT:
-    temp_key_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "credentials", "temp_key.json")
-    os.makedirs(os.path.dirname(temp_key_path), exist_ok=True)
-    with open(temp_key_path, "w") as f:
-        f.write(GOOGLE_JSON_CONTENT)
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_key_path
-else:
-    # Priority 2: Local file path (default fallback)
+# Priority 2: Local file path (default fallback - only used if GOOGLE_CREDENTIALS_JSON env var is missing)
+if not os.getenv("GOOGLE_CREDENTIALS_JSON"):
     CREDENTIALS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "credentials", "sylvan-chess-490510-k6-9210ee07c4a2.json")
     if not os.path.exists(CREDENTIALS_PATH):
         CREDENTIALS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "credentials", "key.json")

@@ -1,5 +1,6 @@
 import io
 import os
+import json
 from google.cloud import vision
 
 def analyze_brand_authenticity(image_path: str, expected_brand: str) -> dict:
@@ -7,9 +8,16 @@ def analyze_brand_authenticity(image_path: str, expected_brand: str) -> dict:
     Analyzes an image using Google Cloud Vision API and compares against the expected brand.
     Returns whether the product is considered genuine or fake based on logos and text.
     """
-    # Initialize the client
+    # 0. Initialize the client using environment-based credentials if available
     try:
-        client = vision.ImageAnnotatorClient()
+        google_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+        if google_json:
+            # Parse the JSON string from environment variable
+            info = json.loads(google_json)
+            client = vision.ImageAnnotatorClient.from_service_account_info(info)
+        else:
+            # Fallback to default (filesystem check)
+            client = vision.ImageAnnotatorClient()
     except Exception as e:
         return {"error": f"Failed to initialize Vision API. Setup error: {str(e)}"}
 
